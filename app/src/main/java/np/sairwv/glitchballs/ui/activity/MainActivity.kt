@@ -1,24 +1,23 @@
 package np.sairwv.glitchballs.ui.activity
 
-import android.graphics.Color
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
-import by.kirich1409.viewbindingdelegate.viewBinding
-import np.sairwv.glitchballs.R
-import np.sairwv.glitchballs.databinding.ActivityMainBinding
+import np.sairwv.glitchballs.BuildConfig
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
-
-    private val binding by viewBinding(ActivityMainBinding::bind)
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val url = if (BuildConfig.FORCE_DEBUG_WEB_FLOW) {
+            BuildConfig.DEBUG_WEB_URL
+        } else {
+            BuildConfig.CONFIG_ENDPOINT
+        }
 
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        window.statusBarColor = Color.BLACK
+        startActivity(
+            Intent(this, WebViewActivity::class.java).putExtra(WebViewActivity.EXTRA_URL, url),
+        )
+        finish()
     }
 }
